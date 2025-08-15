@@ -28,7 +28,7 @@ which is included as part of this source code package.
 #include <unordered_map>
 
 #include <tf2/LinearMath/Quaternion.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <geometry_msgs/msg/quaternion.hpp>
 // #include <visualization_msgs/Marker.h>
 // #include <visualization_msgs/MarkerArray.h>

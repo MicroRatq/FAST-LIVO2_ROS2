@@ -42,11 +42,20 @@ void VIOManager::initializeVIO()
 {
   visual_submap = new SubSparseMap;
 
-  fx = cam->fx();
-  fy = cam->fy();
-  cx = cam->cx();
-  cy = cam->cy();
-  image_resize_factor = cam->scale();
+  // 动态转换为PinholeCamera指针
+  vk::PinholeCamera* pinhole_cam = dynamic_cast<vk::PinholeCamera*>(cam);
+  if (pinhole_cam) {
+    fx = pinhole_cam->fx();
+    fy = pinhole_cam->fy();
+    cx = pinhole_cam->cx();
+    cy = pinhole_cam->cy();
+    // PinholeCamera没有scale成员，image_resize_factor可设为1.0或根据实际情况处理
+    image_resize_factor = 1.0;
+  } else {
+    // 兼容其他相机模型
+    fx = fy = cx = cy = 0;
+    image_resize_factor = 1.0;
+  }
 
   printf("intrinsic: %.6lf, %.6lf, %.6lf, %.6lf\n", fx, fy, cx, cy);
 

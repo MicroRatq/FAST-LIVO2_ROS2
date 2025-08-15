@@ -241,4 +241,5 @@ auto set_pose6d(const double t, const Matrix<T, 3, 1> &a, const Matrix<T, 3, 1> 
   return move(rot_kp);
 }
 
+
 #endif

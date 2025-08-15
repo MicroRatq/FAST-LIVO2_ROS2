@@ -69,9 +69,16 @@ endif()
 find_package(Eigen3 REQUIRED)
 # find dependencies
 find_package(ament_cmake_auto REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(livox_ros_driver2 REQUIRED)
+find_package(pcl_conversions REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(image_transport REQUIRED)
+find_package(nav_msgs REQUIRED)
 ament_auto_find_build_dependencies()
 
-include_directories(include
+include_directories(
+  include
   ${EIGEN3_INCLUDE_DIR}
 )
 
@@ -80,9 +87,19 @@ ament_auto_add_library(vio SHARED
     src/frame.cpp 
     src/visual_point.cpp
 )
+ament_target_dependencies(vio
+    tf2_geometry_msgs
+    livox_ros_driver2
+    pcl_conversions
+)
 
 ament_auto_add_library(lio SHARED
     src/voxel_map.cpp
+)
+ament_target_dependencies(lio
+    tf2_geometry_msgs
+    livox_ros_driver2
+    pcl_conversions
 )
 
 ament_auto_add_library(pre SHARED
@@ -96,6 +113,14 @@ ament_auto_add_library(imu_proc SHARED
 ament_auto_add_library(laser_mapping SHARED
     src/LIVMapper.cpp 
 )
+ament_target_dependencies(laser_mapping
+    tf2_geometry_msgs
+    livox_ros_driver2
+    pcl_conversions
+    cv_bridge
+    image_transport
+    nav_msgs
+)
 
 ament_auto_add_executable(fastlivo_mapping
     src/main.cpp
@@ -108,6 +133,14 @@ endif()
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY rviz_cfg DESTINATION share/${PROJECT_NAME})
+install(PROGRAMS 
+    scripts/image_converter.py
+    scripts/livox_converter.py
+    scripts/tf_publisher.py
+    scripts/timestamp_monitor.py
+    scripts/debug_data_flow.py
+    DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
